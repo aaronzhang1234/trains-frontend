@@ -24,7 +24,7 @@ function Box(props: ThreeElements['mesh']){
       ref={ref}
       scale={clicked ? 1.5 : 1}
       onClick={(event) => {
-        alert("clicked!")
+        console.log(event)
       }}
       onPointerOver={(event) => hover(true)}
       onPointerOut={(event) => hover(false)}>
@@ -35,7 +35,10 @@ function Box(props: ThreeElements['mesh']){
 }
 
 function App() {
-  const locations = [{"lat":.50, "long":-.25}, {"lat":.20, "long":.25}];
+  const locations = [
+  {"lat": 41.966099, "long":-87.709426},
+  {"lat": 41.939562, "long":-87.653345},
+]
   return (
     <React.Fragment>
     <Canvas style={{width:"100vw"}}>
@@ -46,10 +49,15 @@ function App() {
           maxDistance= {10.0}
         />
         {
-          locations.map((train)=>
-            <Box position={[train.lat, train.long, -.25]}/>)
+          locations.map((train)=> {
+            let lat = (train.lat - 41.893185) * -19.7119071783;
+            let long = (train.long + 87.75289) * 50.7119071783;
+            console.log(lat)
+            console.log(long)
+            return <Box position={[lat, long, -.25]}/>;
+          })
         }
-        <Box position={[.95,2,-.25]}/>
+        <Box position={[0,0,-.25]}/>
         <Model/>
       </Suspense>
     </Canvas>
@@ -59,3 +67,5 @@ function App() {
 }
 
 export default App
+
+.047
