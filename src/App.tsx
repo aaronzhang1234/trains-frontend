@@ -5,7 +5,6 @@ import "./App.css";
 import axios from 'axios';
 import stations from './stations.json';
 import { string } from 'three/examples/jsm/nodes/Nodes.js';
-import response from './apiresponse.json';
 
 
 
@@ -20,19 +19,21 @@ interface InbetweenCompProps{
   stopIdx: number
   isVisible: boolean
   route: string
+  avg_times: JSON
 }
 
-function InbetweenComp({stopIdx, isVisible, route}:InbetweenCompProps){
+function InbetweenComp({stopIdx, isVisible, route, avg_times}:InbetweenCompProps){
   if(isVisible){
-    return <div className="inbetween" onClick={()=>consoleOut(stopIdx, route)}></div>
+    return <div className="inbetween" onClick={()=>consoleOut(stopIdx, route, avg_times)}></div>
   }else{
     return <React.Fragment/>
   }
 }
 
-function consoleOut(stopIdx:number, route:string){
+function consoleOut(stopIdx:number, route:string, avg_times:JSON){
   let station_routes = stations.route_order[route as keyof typeof string]
-  console.log(station_routes[stopIdx] +"-" +station_routes[stopIdx+1])
+  let route_key = station_routes[stopIdx] + "-" + station_routes[stopIdx+1]
+  console.log(avg_times[route_key as keyof typeof string])
 }
 
 class App extends Component<{}, AppState> {
@@ -54,64 +55,25 @@ class App extends Component<{}, AppState> {
       "Content-Type":"text/plain",
       "route": route,
       "start_time": start_iso,
-      "end_time": end_iso
+      "end_time": end_iso,
+      "show_trains": "false"
     }
-    this.setState({response: response})
-    /*
+
     axios.get("https://ldchm3dr68.execute-api.us-east-1.amazonaws.com/Prod/trains", {headers, withCredentials:false} )
       .then(response=>this.setState({response:response.data}))
-    */
+
   }
-  /*
-  update_trains(train_response:any){    
-    if(train_response.hasOwnProperty("no_of_trains")){
-      let trains = train_response["trains"]
-      let tables:Array<any> = []
-      let train_stops = train_response["stops"]
-      for(var key in trains){        
-        let train = trains[key]
-        let table = (
-          <table>
-            <thead>
-              <tr>
-                <th>Stop</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {train_stops.map((stop_id:string, index:number)=>{
-                let station_name = stations.station_dict[stop_id as keyof typeof string]
-                let stop_time = train["stop_times"][index]
-                return(<tr>
-                    <td>{station_name}</td>
-                    <td>{stop_time}</td>
-                  </tr>)
-              })}
-            </tbody>
-          </table>
-        )
-        tables.push(table)
-      }
-      return(
-        <div>
-          <h1>{train_response["no_of_trains"]}</h1>
-          {tables}
-        </div>
-      )
-    }
-    return(
-      <h1>!!!</h1>
-    )
-  }
-    */
   updateRoute=(e:any)=>{
     this.setState({select_value:e.target.value})
   }
   drawRoute=(route:string, train_response:any)=>{
     let route_order = stations.route_order[route as keyof typeof string];
     if(train_response.hasOwnProperty("no_of_trains")){
+      console.log(train_response)
+      let full_route_stats = train_response["stats"]["full_route_stats"]
       return(
-        <div>
+        <div id="routeContainer">
+          <h2>{full_route_stats["slowest_train"]["total_time"]} - {full_route_stats["avg_total_time"]} - {full_route_stats["fastest_train"]["total_time"]}</h2>
           {route_order.map((stopId:string, index:number)=>(          
             <React.Fragment>
             <div className="routeBlock">
@@ -124,15 +86,13 @@ class App extends Component<{}, AppState> {
               stopIdx={index} 
               isVisible={index!=route_order.length-1}
               route={route}
+              avg_times={train_response["stats"]["time_between_stats"]}
             />
             </React.Fragment>
           ))}
         </div>
       )
     }
-  }
-  consoleOut(stopId:string){
-    console.log(stopId)
   }
   render() {
     return (
