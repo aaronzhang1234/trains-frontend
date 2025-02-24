@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import Map from './routes/Map.tsx'
 import App from './App.tsx'
-import Reconciler from './routes/Reconciler.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
 
@@ -11,9 +11,10 @@ const router = createBrowserRouter([
     element: <App/>
   },
   {
-    path: "reconciler",
-    element: <Reconciler/>
+    path: "map",
+    element: <Map/>
   }
+
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

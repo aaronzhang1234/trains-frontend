@@ -38,3 +38,38 @@
 .read-the-docs {
   color: #888;
 }
+
+.inbetween{
+  border-style:solid;
+  width:10px;
+  height:20px;
+  cursor: pointer;
+}
+
+.inline{
+  display:inline-block
+}
+
+.circle{
+  height: 25px;
+  width: 25px;
+  background-color: #bbb;
+  border-radius: 50%;
+}
+
+.stationName{
+  display:inline-block;
+  margin:0;
+}
+
+.routeBlock{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom:10px;
+  padding-top:10px;
+}
+
+#routeContainer{
+  padding-left: 100px;
+}
