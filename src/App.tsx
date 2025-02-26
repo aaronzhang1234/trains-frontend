@@ -5,7 +5,7 @@ import "./App.css";
 import axios from 'axios';
 import stations from './stations.json';
 import { string } from 'three/examples/jsm/nodes/Nodes.js';
-
+import response from './response.json'
 
 
 type AppState = {
@@ -24,7 +24,7 @@ interface InbetweenCompProps{
 
 function InbetweenComp({stopIdx, isVisible, route, avg_times}:InbetweenCompProps){
   if(isVisible){
-    return <div className="inbetween" onClick={()=>consoleOut(stopIdx, route, avg_times)}></div>
+    return <div className="inbetween routeBlock" onClick={()=>consoleOut(stopIdx, route, avg_times)}></div>
   }else{
     return <React.Fragment/>
   }
@@ -59,9 +59,12 @@ class App extends Component<{}, AppState> {
       "show_trains": "false"
     }
 
+    /*
     axios.get("https://ldchm3dr68.execute-api.us-east-1.amazonaws.com/Prod/trains", {headers, withCredentials:false} )
-      .then(response=>this.setState({response:response.data}))
+      .then(response=>this.setState({response:response.data}))    
+    */
 
+    this.setState({response:response})
   }
   updateRoute=(e:any)=>{
     this.setState({select_value:e.target.value})
@@ -73,21 +76,21 @@ class App extends Component<{}, AppState> {
       let full_route_stats = train_response["stats"]["full_route_stats"]
       return(
         <div id="routeContainer">
-          <h2>{full_route_stats["slowest_train"]["total_time"]} - {full_route_stats["avg_total_time"]} - {full_route_stats["fastest_train"]["total_time"]}</h2>
+          <h2>{full_route_stats["fastest_train"]["total_time"]} - {full_route_stats["avg_total_time"]} - {full_route_stats["slowest_train"]["total_time"]}</h2>
           {route_order.map((stopId:string, index:number)=>(          
             <React.Fragment>
             <div className="routeBlock">
-              <div style={{textAlign:"left"}}>
-                <div className={["inline", "circle"].join(' ')} ></div>
-                <h3 className="stationName">{stations.station_dict[stopId as keyof typeof string]}</h3>
+              <p className = "stationName">{stations.station_dict[stopId as keyof typeof string]}</p>
+              <div className="travelBlock">
+                <div className = "circle" ></div>
+                <InbetweenComp 
+                  stopIdx={index} 
+                  isVisible={index!=route_order.length-1}
+                  route={route}
+                  avg_times={train_response["stats"]["time_between_stats"]}
+                />
               </div>
             </div>
-            <InbetweenComp 
-              stopIdx={index} 
-              isVisible={index!=route_order.length-1}
-              route={route}
-              avg_times={train_response["stats"]["time_between_stats"]}
-            />
             </React.Fragment>
           ))}
         </div>

@@ -1,0 +1,154 @@
+{
+    "no_of_trains": 51,
+    "route": "brn-1",
+    "stats": {
+      "full_route_stats": {
+        "avg_total_time": "00:46:29",
+        "slowest_train": {
+          "total_time": "00:54:45",
+          "total_time_uuid": "dad46f80-148e-40fa-94d2-19d2495e8f30"
+        },
+        "fastest_train": {
+          "total_time": "00:09:24",
+          "total_time_uuid": "a2d3ae12-5a3a-483c-ab58-20e752194e26"
+        }
+      },
+      "time_between_stats": {
+        "Created Time-40730": {
+          "max_time": "00:02:49",
+          "max_time_uuid": "9ef6f2d5-ae6f-48b7-94fa-b65ba12e9226",
+          "mean_time": "00:01:33"
+        },
+        "40730-40040": {
+          "max_time": "00:07:21",
+          "max_time_uuid": "dad46f80-148e-40fa-94d2-19d2495e8f30",
+          "mean_time": "00:01:28"
+        },
+        "40040-40160": {
+          "max_time": "00:02:20",
+          "max_time_uuid": "b8842878-cf9f-4a6d-ae3e-08247b283213",
+          "mean_time": "00:01:36"
+        },
+        "40160-40850": {
+          "max_time": "00:01:16",
+          "max_time_uuid": "2a6b1a42-9774-4820-bbba-6061fc7e87c3",
+          "mean_time": "00:00:55"
+        },
+        "40850-40680": {
+          "max_time": "00:03:59",
+          "max_time_uuid": "adc9f821-7e9c-451b-84e3-6ffd87b8a56b",
+          "mean_time": "00:02:17"
+        },
+        "40680-41700": {
+          "max_time": "00:01:47",
+          "max_time_uuid": "c3618a9b-3876-4b0f-9f42-f01e3978aba7",
+          "mean_time": "00:01:04"
+        },
+        "41700-40260": {
+          "max_time": "00:04:00",
+          "max_time_uuid": "23b147da-a132-4069-9bfb-61d47ff32214",
+          "mean_time": "00:01:46"
+        },
+        "40260-40380": {
+          "max_time": "00:02:03",
+          "max_time_uuid": "9ef6f2d5-ae6f-48b7-94fa-b65ba12e9226",
+          "mean_time": "00:00:55"
+        },
+        "40380-40460": {
+          "max_time": "00:06:53",
+          "max_time_uuid": "052579e4-1abd-4208-bf19-ccdb124f4e20",
+          "mean_time": "00:01:56"
+        },
+        "40460-40710": {
+          "max_time": "00:03:19",
+          "max_time_uuid": "379a34bf-0a34-4dd0-abe0-87dd487220e1",
+          "mean_time": "00:02:30"
+        },
+        "40710-40800": {
+          "max_time": "00:12:29",
+          "max_time_uuid": "9ef6f2d5-ae6f-48b7-94fa-b65ba12e9226",
+          "mean_time": "00:03:44"
+        },
+        "40800-40660": {
+          "max_time": "00:11:43",
+          "max_time_uuid": "9ef6f2d5-ae6f-48b7-94fa-b65ba12e9226",
+          "mean_time": "00:04:00"
+        },
+        "40660-41220": {
+          "max_time": "00:03:03",
+          "max_time_uuid": "e011b3d6-7e3d-4af7-ab9c-d6fd308f2b1c",
+          "mean_time": "00:02:01"
+        },
+        "41220-40530": {
+          "max_time": "00:05:52",
+          "max_time_uuid": "8e0ee1d2-b3b2-4b4c-bd9a-0f2fc35918af",
+          "mean_time": "00:02:28"
+        },
+        "40530-41210": {
+          "max_time": "00:02:32",
+          "max_time_uuid": "060f7ad8-a193-4f40-be34-0637a78a3a81",
+          "mean_time": "00:01:13"
+        },
+        "41210-41320": {
+          "max_time": "00:02:13",
+          "max_time_uuid": "39fc050e-fda1-463f-beae-1f1c24299b6d",
+          "mean_time": "00:01:06"
+        },
+        "41320-40360": {
+          "max_time": "00:06:56",
+          "max_time_uuid": "04c58ec3-f657-4433-994f-cf10ddd1e6f8",
+          "mean_time": "00:03:58"
+        },
+        "40360-41310": {
+          "max_time": "00:02:43",
+          "max_time_uuid": "5b171c15-8bd3-49ca-b8aa-698fe6006a83",
+          "mean_time": "00:01:12"
+        },
+        "41310-41440": {
+          "max_time": "00:02:27",
+          "max_time_uuid": "316f24b8-d7f9-49b8-afe0-5e6d3813e84f",
+          "mean_time": "00:01:20"
+        },
+        "41440-41460": {
+          "max_time": "00:02:36",
+          "max_time_uuid": "060f7ad8-a193-4f40-be34-0637a78a3a81",
+          "mean_time": "00:01:25"
+        },
+        "41460-41500": {
+          "max_time": "00:02:41",
+          "max_time_uuid": "aefe2586-7e9c-45f6-bf8c-42e1dc1b7b5d",
+          "mean_time": "00:01:25"
+        },
+        "41500-40090": {
+          "max_time": "00:02:41",
+          "max_time_uuid": "dad46f80-148e-40fa-94d2-19d2495e8f30",
+          "mean_time": "00:02:06"
+        },
+        "40090-41480": {
+          "max_time": "00:02:11",
+          "max_time_uuid": "060f7ad8-a193-4f40-be34-0637a78a3a81",
+          "mean_time": "00:01:10"
+        },
+        "41480-41010": {
+          "max_time": "00:03:29",
+          "max_time_uuid": "46d446e4-79fd-4cf1-90e7-3b263b812bb8",
+          "mean_time": "00:02:04"
+        },
+        "41010-40870": {
+          "max_time": "00:02:35",
+          "max_time_uuid": "04c58ec3-f657-4433-994f-cf10ddd1e6f8",
+          "mean_time": "00:01:41"
+        },
+        "40870-41180": {
+          "max_time": "00:02:28",
+          "max_time_uuid": "060f7ad8-a193-4f40-be34-0637a78a3a81",
+          "mean_time": "00:01:45"
+        },
+        "41180-41290": {
+          "max_time": "00:02:33",
+          "max_time_uuid": "5b223670-6504-4506-aef7-88b9a987500a",
+          "mean_time": "00:00:48"
+        }
+      }
+    }
+  }
