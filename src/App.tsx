@@ -59,12 +59,11 @@ class App extends Component<{}, AppState> {
       "show_trains": "false"
     }
 
-    /*
     axios.get("https://ldchm3dr68.execute-api.us-east-1.amazonaws.com/Prod/trains", {headers, withCredentials:false} )
       .then(response=>this.setState({response:response.data}))    
-    */
 
-    this.setState({response:response})
+
+    //this.setState({response:response})
   }
   updateRoute=(e:any)=>{
     this.setState({select_value:e.target.value})
@@ -77,6 +76,7 @@ class App extends Component<{}, AppState> {
       return(
         <div id="routeContainer">
           <h2>{full_route_stats["fastest_train"]["total_time"]} - {full_route_stats["avg_total_time"]} - {full_route_stats["slowest_train"]["total_time"]}</h2>
+          <div className="routeMap">
           {route_order.map((stopId:string, index:number)=>(          
             <React.Fragment>
             <div className="routeBlock">
@@ -93,6 +93,7 @@ class App extends Component<{}, AppState> {
             </div>
             </React.Fragment>
           ))}
+          </div>
         </div>
       )
     }

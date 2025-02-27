@@ -1,13 +1,18 @@
 #root {
   text-align: center;
+  width: 100vw;
 }
 
 .inbetween{
+  margin-left:-5px;
+  margin-right:-5px;
   border-style:solid;
   width:20px;
   height:10px;
   cursor: pointer;
   flex:1;
+  z-index: 2;
+  background-color: white;
 }
 
 .inline{
@@ -16,19 +21,18 @@
 
 .circle{
   height: 25px;
+  z-index: 5;
   width: 25px;
   background-color: #bbb;
   border-radius: 50%;
 }
 
 .stationName{
-  display:inline-block;
-  margin:0;
-
   top: 50%;
   left: 50%;
   transform-origin: center center;
-  transform: translate(-50%, -50%) rotate(-45deg);
+  transform: rotate(-45deg);
+
 }
 
 .travelBlock{
@@ -38,9 +42,14 @@
 
 .routeBlock{
   display: inline-block;
-  width: 4em;
+  width: 2.5em;
+  white-space: nowrap;
 }
 
 #routeContainer{
-  width:100%
+  width:100%;
+}
+
+.routeMap{
+  padding-top:10em;
 }
