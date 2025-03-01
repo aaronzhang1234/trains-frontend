@@ -1,0 +1,24 @@
+name: deploy-frontend-dev
+on: [workflow_dispatch]
+jobs: 
+  deploy-frontend-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Installing Node.js
+        uses: actions/setup-node@v3
+        with: 
+          node-version: "18"
+      - name: Installing Dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESSID }}
+          aws-secret-access-key: ${{ secrets.AWSSECRETKEY}}
+          aws-region: us-east-2
+      - name: Deploy to S3
+        run: aws s3 sync ./dist/ s3://ctatrainsfrontend-dev --delete

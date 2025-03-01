@@ -1,9 +1,9 @@
 import React, {Suspense, useState, useRef } from 'react'
 import * as THREE from 'three'
 import './Map.css'
-import {Canvas, useFrame, ThreeElements, useLoader} from '@react-three/fiber'
-import {Environment, OrbitControls} from '@react-three/drei'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import {Canvas, ThreeElements, useLoader} from '@react-three/fiber'
+import {OrbitControls} from '@react-three/drei'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 function Model() {
   const gltf = useLoader(GLTFLoader, "./CTA_COMPLETE_COLOR.glb");
@@ -17,17 +17,17 @@ function Model() {
 function Box(props: ThreeElements['mesh']){
   const ref = useRef<THREE.Mesh>(null!)
   const [hovered, hover] = useState(false)
-  const [clicked, click] = useState(false)
+  const [clicked] = useState(false)
   return (
     <mesh
       {...props}
       ref={ref}
       scale={clicked ? 1.5 : 1}
-      onClick={(event) => {
+      onClick={() => {
         alert("clicked!")
       }}
-      onPointerOver={(event) => hover(true)}
-      onPointerOut={(event) => hover(false)}>
+      onPointerOver={() => hover(true)}
+      onPointerOut={() => hover(false)}>
       <sphereGeometry args={[.08, 32]} />
       <meshStandardMaterial color={hovered ? 'red' : 'white'} />
     </mesh>

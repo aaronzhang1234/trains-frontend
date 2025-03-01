@@ -4,18 +4,17 @@ import { TimeDuration } from '../../services/Duration';
 
 interface LegProps{
   isVisible : boolean
-  fullRouteStats : JSON
   timeBetweenStats : JSON
   avgTimeBetweenStops : TimeDuration
   onLegClick: (item:string) => void
 }
 
-export default function Leg({isVisible, fullRouteStats, timeBetweenStats, avgTimeBetweenStops,  onLegClick}:LegProps){
+export default function Leg({isVisible, timeBetweenStats, avgTimeBetweenStops,  onLegClick}:LegProps){
   if(isVisible){
       let avgTimeBetween = (timeBetweenStats as any)["mean_time"]
       let timeDurationLegBetween = new TimeDuration(avgTimeBetween)
 
-      const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+      const handleClick = () => {
         onLegClick("hello");
       };
   

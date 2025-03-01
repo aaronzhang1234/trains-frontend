@@ -24,7 +24,7 @@ class RouteBlock extends Component<RouteBlockProps, RouteBlockState>{
         isLegStatsVisible:false
       }
     }
-    handleLegClick = (click:any) =>{
+    handleLegClick = () =>{
       this.setState({isLegStatsVisible: !this.state.isLegStatsVisible})
     }
     render(){
@@ -35,7 +35,6 @@ class RouteBlock extends Component<RouteBlockProps, RouteBlockState>{
             <div className = "circle" ></div>
             <Leg 
               isVisible= {this.props.isLegVisible}
-              fullRouteStats = {this.props.fullRouteStats}
               timeBetweenStats={this.props.timeBetweenStats}
               avgTimeBetweenStops = {this.props.avgTimeBetweenStops}
               onLegClick = {this.handleLegClick}
