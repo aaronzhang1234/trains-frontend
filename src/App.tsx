@@ -1,11 +1,10 @@
-import {Fragment, BaseSyntheticEvent, Component} from 'react'
+import {Fragment, Component} from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./App.css";
 import axios from 'axios';
 import RouteBlock from './components/RouteBlock/RouteBlock';
 import stations from './stations.json';
-import response from './response.json'
 import { TimeDuration } from './services/Duration';
 
 
@@ -26,7 +25,7 @@ class App extends Component<{}, AppState> {
       response: {}
     }
   }
-  onClick =(input:BaseSyntheticEvent) =>{
+  onClick =() =>{
     let route = this.state.select_value
     let start_iso = this.state.start_date?.toISOString();
     let end_iso = this.state.end_date?.toISOString();
