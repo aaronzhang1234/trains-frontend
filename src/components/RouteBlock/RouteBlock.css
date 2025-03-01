@@ -1,0 +1,26 @@
+.circle{
+  height: 25px;
+  z-index: 5;
+  width: 25px;
+  background-color: #bbb;
+  border-radius: 50%;
+}
+
+.stationName{
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  transform: rotate(-45deg);
+
+}
+
+.travelBlock{
+  display: flex;
+  align-items: center;
+}
+
+.routeBlock{
+  display: inline-block;
+  width: 2.5em;
+  white-space: nowrap;
+}

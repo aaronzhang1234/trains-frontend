@@ -1,11 +1,12 @@
-import React, {Fragment, BaseSyntheticEvent, Component} from 'react'
+import {Fragment, BaseSyntheticEvent, Component} from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./App.css";
 import axios from 'axios';
+import RouteBlock from './components/RouteBlock/RouteBlock';
 import stations from './stations.json';
-import { string } from 'three/examples/jsm/nodes/Nodes.js';
-
+import response from './response.json'
+import { TimeDuration } from './services/Duration';
 
 
 type AppState = {
@@ -13,27 +14,6 @@ type AppState = {
   start_date?: Date
   end_date?: Date
   response: any
-}
-
-interface InbetweenCompProps{
-  stopIdx: number
-  isVisible: boolean
-  route: string
-  avg_times: JSON
-}
-
-function InbetweenComp({stopIdx, isVisible, route, avg_times}:InbetweenCompProps){
-  if(isVisible){
-    return <div className="inbetween" onClick={()=>consoleOut(stopIdx, route, avg_times)}></div>
-  }else{
-    return <React.Fragment/>
-  }
-}
-
-function consoleOut(stopIdx:number, route:string, avg_times:JSON){
-  let station_routes = stations.route_order[route as keyof typeof string]
-  let route_key = station_routes[stopIdx] + "-" + station_routes[stopIdx+1]
-  console.log(avg_times[route_key as keyof typeof string])
 }
 
 class App extends Component<{}, AppState> {
@@ -60,36 +40,42 @@ class App extends Component<{}, AppState> {
     }
 
     axios.get("https://ldchm3dr68.execute-api.us-east-1.amazonaws.com/Prod/trains", {headers, withCredentials:false} )
-      .then(response=>this.setState({response:response.data}))
+      .then(response=>this.setState({response:response.data}))    
 
+    //this.setState({response:response})
   }
+
   updateRoute=(e:any)=>{
     this.setState({select_value:e.target.value})
   }
+
+  getLegStats= (route:string, stopIdx: number, time_between_stats:JSON) =>{
+    let station_routes = (stations.route_order as any)[route]
+    let route_key = station_routes[stopIdx] + "-" + station_routes[stopIdx+1]
+    return (time_between_stats as any)[route_key]
+  }
+
   drawRoute=(route:string, train_response:any)=>{
-    let route_order = stations.route_order[route as keyof typeof string];
+    let route_order = (stations.route_order as any)[route];
     if(train_response.hasOwnProperty("no_of_trains")){
-      console.log(train_response)
-      let full_route_stats = train_response["stats"]["full_route_stats"]
+      let fullRouteStats = train_response["stats"]["full_route_stats"]
+      let timeBetweenStats = train_response["stats"]["time_between_stats"]      
+      let avgTimeBetweenStops = new TimeDuration(fullRouteStats["avg_total_time"]).divideBy(route_order.length)
+      console.log(avgTimeBetweenStops.toString)
       return(
         <div id="routeContainer">
-          <h2>{full_route_stats["slowest_train"]["total_time"]} - {full_route_stats["avg_total_time"]} - {full_route_stats["fastest_train"]["total_time"]}</h2>
-          {route_order.map((stopId:string, index:number)=>(          
-            <React.Fragment>
-            <div className="routeBlock">
-              <div style={{textAlign:"left"}}>
-                <div className={["inline", "circle"].join(' ')} ></div>
-                <h3 className="stationName">{stations.station_dict[stopId as keyof typeof string]}</h3>
-              </div>
-            </div>
-            <InbetweenComp 
-              stopIdx={index} 
-              isVisible={index!=route_order.length-1}
-              route={route}
-              avg_times={train_response["stats"]["time_between_stats"]}
-            />
-            </React.Fragment>
-          ))}
+          <h2>{fullRouteStats["fastest_train"]["total_time"]} - {fullRouteStats["avg_total_time"]} - {fullRouteStats["slowest_train"]["total_time"]}</h2>
+          <div className="routeMap">
+            {route_order.map((stopId:string, index:number)=>(          
+              <RouteBlock
+                stopId={stopId}
+                fullRouteStats = {fullRouteStats}
+                avgTimeBetweenStops = {avgTimeBetweenStops}
+                timeBetweenStats={this.getLegStats(route, index, timeBetweenStats)}
+                isLegVisible ={index!=route_order.length-1}
+              />
+            ))}
+          </div>
         </div>
       )
     }
