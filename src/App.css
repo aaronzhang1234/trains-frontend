@@ -3,53 +3,11 @@
   width: 100vw;
 }
 
-.inbetween{
-  margin-left:-5px;
-  margin-right:-5px;
-  border-style:solid;
-  width:20px;
-  height:10px;
-  cursor: pointer;
-  flex:1;
-  z-index: 2;
-  background-color: white;
-}
-
-.inline{
-  display:inline-block
-}
-
-.circle{
-  height: 25px;
-  z-index: 5;
-  width: 25px;
-  background-color: #bbb;
-  border-radius: 50%;
-}
-
-.stationName{
-  top: 50%;
-  left: 50%;
-  transform-origin: center center;
-  transform: rotate(-45deg);
-
-}
-
-.travelBlock{
-  display: flex;
-  align-items: center;
-}
-
-.routeBlock{
-  display: inline-block;
-  width: 2.5em;
-  white-space: nowrap;
-}
-
 #routeContainer{
   width:100%;
 }
 
 .routeMap{
   padding-top:10em;
+  padding-bottom: 10em;
 }
