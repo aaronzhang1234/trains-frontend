@@ -7,7 +7,6 @@ interface LegStatsProps{
 }
 
 export default function LegStats({isVisible, timeBetweenStats}:LegStatsProps){
-  console.log(timeBetweenStats)
   if(isVisible){
     return( 
       <div className="legStats">
