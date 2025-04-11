@@ -6,7 +6,6 @@ import axios from 'axios';
 import RouteBlock from './components/RouteBlock/RouteBlock';
 import stations from './stations.json';
 import { TimeDuration } from './services/Duration';
-import response from './response.json'
 import Header from './components/Header/Header';
 import LoadingGif from './assets/loading.gif'
 import React from 'react';
