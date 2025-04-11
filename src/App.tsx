@@ -107,7 +107,10 @@ class App extends Component<{}, AppState> {
     }else if(train_response.hasOwnProperty("error"))
     {
       return(
-        <h1>{train_response["error"]}</h1>
+        <Fragment>
+          {this.createForm()}
+          <h1>{train_response["error"]}</h1>
+        </Fragment>
       )
     }
     return(
