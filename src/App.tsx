@@ -13,7 +13,7 @@ import React from 'react';
 
 
 type AppState = {
-  select_value?:string
+  select_value:string
   start_date?: Date
   end_date?: Date
   response: any
@@ -32,20 +32,30 @@ class App extends Component<{}, AppState> {
   handleSubmit =(event:FormEvent<HTMLFormElement>) =>{
     event.preventDefault()
     let route = (event.target as HTMLFormElement).route.value
-    let start_iso = this.state.start_date?.toISOString();
-    let end_iso = this.state.end_date?.toISOString();
 
-    const headers= {
-      "Content-Type":"text/plain",
-      "route": route,
-      "start_time": start_iso,
-      "end_time": end_iso,
-      "show_trains": "false"
+    if (this.state.start_date && this.state.end_date) {
+      let start_iso = this.state.start_date.toISOString();
+      let end_iso = this.state.end_date.toISOString();
+      const oneWeekInMs = 7 * 24 * 60 * 60 * 1000
+      const diff = Math.abs(this.state.start_date.getTime() - this.state.end_date.getTime())
+
+      if(diff > oneWeekInMs){
+        this.setState({response:{"error":"Please query only a week or less of data"}})        
+        return 
+      }
+
+      const headers= {
+        "Content-Type":"text/plain",
+        "route": route,
+        "start_time": start_iso,
+        "end_time": end_iso,
+        "show_trains": "false"
+      }
+      this.setState({response:{"loading":true}})
+      axios.get("https://ldchm3dr68.execute-api.us-east-1.amazonaws.com/Prod/trains", {headers, withCredentials:false} )
+        .then(response=>this.setState({response:response.data}))    
+        .catch(error=>this.handleError(error))
     }
-    this.setState({response:{"loading":true}})
-    axios.get("https://ldchm3dr68.execute-api.us-east-1.amazonaws.com/Prod/trains", {headers, withCredentials:false} )
-      .then(response=>this.setState({response:response.data}))    
-      .catch(error=>this.handleError(error))
   }
 
   handleError=(error:any)=>{
