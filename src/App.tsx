@@ -1,4 +1,4 @@
-import {Fragment, Component} from 'react'
+import {Fragment, Component, FormEvent} from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./App.css";
@@ -6,10 +6,13 @@ import axios from 'axios';
 import RouteBlock from './components/RouteBlock/RouteBlock';
 import stations from './stations.json';
 import { TimeDuration } from './services/Duration';
+import Header from './components/Header/Header';
+import LoadingGif from './assets/loading.gif'
+import React from 'react';
 
 
 type AppState = {
-  select_value?:string
+  select_value:string
   start_date?: Date
   end_date?: Date
   response: any
@@ -25,23 +28,39 @@ class App extends Component<{}, AppState> {
       response: {}
     }
   }
-  onClick =() =>{
-    let route = this.state.select_value
-    let start_iso = this.state.start_date?.toISOString();
-    let end_iso = this.state.end_date?.toISOString();
-    console.log(route)
-    const headers= {
-      "Content-Type":"text/plain",
-      "route": route,
-      "start_time": start_iso,
-      "end_time": end_iso,
-      "show_trains": "false"
+  handleSubmit =(event:FormEvent<HTMLFormElement>) =>{
+    event.preventDefault()
+    let route = (event.target as HTMLFormElement).route.value
+
+    if (this.state.start_date && this.state.end_date) {
+      let start_iso = this.state.start_date.toISOString();
+      let end_iso = this.state.end_date.toISOString();
+      const oneWeekInMs = 7 * 24 * 60 * 60 * 1000
+      const diff = Math.abs(this.state.start_date.getTime() - this.state.end_date.getTime())
+
+      if(diff > oneWeekInMs){
+        this.setState({response:{"error":"Please query only a week or less of data"}})        
+        return 
+      }
+
+      const headers= {
+        "Content-Type":"text/plain",
+        "route": route,
+        "start_time": start_iso,
+        "end_time": end_iso,
+        "show_trains": "false"
+      }
+      this.setState({response:{"loading":true}})
+      axios.get("https://ldchm3dr68.execute-api.us-east-1.amazonaws.com/Prod/trains", {headers, withCredentials:false} )
+        .then(response=>this.setState({response:response.data}))    
+        .catch(error=>this.handleError(error))
     }
+  }
 
-    axios.get("https://ldchm3dr68.execute-api.us-east-1.amazonaws.com/Prod/trains", {headers, withCredentials:false} )
-      .then(response=>this.setState({response:response.data}))    
-
-    //this.setState({response:response})
+  handleError=(error:any)=>{
+    console.log(error)
+    console.log(error.response.data)
+    this.setState({response:{"error":error.response.data}})
   }
 
   updateRoute=(e:any)=>{
@@ -49,19 +68,20 @@ class App extends Component<{}, AppState> {
   }
 
   getLegStats= (route:string, stopIdx: number, time_between_stats:JSON) =>{
-    let station_routes = (stations.route_order as any)[route]
+    let station_routes = (stations.route_info as any)[route]["route_order"]
     let route_key = station_routes[stopIdx] + "-" + station_routes[stopIdx+1]
     return (time_between_stats as any)[route_key]
   }
 
-  drawRoute=(route:string, train_response:any)=>{
-    let route_order = (stations.route_order as any)[route];
+  drawRoute=(train_response:any)=>{
     if(train_response.hasOwnProperty("no_of_trains")){
+      let route = train_response["route"]
+      let route_order = (stations.route_info as any)[route]["route_order"];
       let fullRouteStats = train_response["stats"]["full_route_stats"]
       let timeBetweenStats = train_response["stats"]["time_between_stats"]      
       let avgTimeBetweenStops = new TimeDuration(fullRouteStats["avg_total_time"]).divideBy(route_order.length)
-      console.log(avgTimeBetweenStops.toString)
       return(
+        <React.Fragment>
         <div id="routeContainer">
           <h2>{fullRouteStats["fastest_train"]["total_time"]} - {fullRouteStats["avg_total_time"]} - {fullRouteStats["slowest_train"]["total_time"]}</h2>
           <div className="routeMap">
@@ -76,17 +96,30 @@ class App extends Component<{}, AppState> {
             ))}
           </div>
         </div>
+        {this.createForm()}
+        </React.Fragment>
+      )
+    }else if(train_response.hasOwnProperty("loading")){
+      return(
+        <img id="loadingGif" src={LoadingGif}></img>
+      )
+    }else if(train_response.hasOwnProperty("error"))
+    {
+      return(
+        <Fragment>
+          {this.createForm()}
+          <h1>{train_response["error"]}</h1>
+        </Fragment>
       )
     }
+    return(
+      this.createForm()
+    )
   }
-  render() {
-    return (
-    <Fragment>
-      {this.drawRoute(this.state.select_value!, this.state.response)}
-      <select 
-        value={this.state.select_value}
-        onChange={this.updateRoute}
-      >
+  createForm=()=>{
+    return(
+      <form onSubmit={this.handleSubmit}>
+      <select name="route">
         <option value="brn-1">Brown to Kimbal</option>
         <option value="brn-5">Brown to Loop</option>
         <option value="org-1">Orange to Loop</option>
@@ -121,7 +154,15 @@ class App extends Component<{}, AppState> {
         dateFormat="MM/dd/yyyy h:mm aa"
         showTimeSelect selectsEnd
       />
-      <input type="submit" onClick={this.onClick}/>
+      <input type="submit"/>
+    </form> 
+    )
+  }
+  render() {
+    return (
+    <Fragment>
+      <Header/>
+      {this.drawRoute(this.state.response)}
     </Fragment>
     )
   }
