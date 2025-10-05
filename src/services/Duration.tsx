@@ -26,6 +26,15 @@ export class TimeDuration {
         return this.duration.toFormat('hh:mm:ss')
     }
     
+    roundDown() : string{
+        var obj = {
+            "hours":this.duration.hours,
+            "minutes":this.duration.minutes,
+            "seconds":0
+        }
+        return Duration.fromObject(obj).toFormat("hh:mm")
+    }
+
     compare(durationToCompare: TimeDuration): number{
         const totalSeconds = this.duration.as('seconds')
         const comparisonSeconds = durationToCompare.duration.as('seconds')
