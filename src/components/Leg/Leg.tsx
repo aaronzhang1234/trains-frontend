@@ -11,17 +11,22 @@ interface LegProps{
 
 export default function Leg({isVisible, timeBetweenStats, avgTimeBetweenStops,  onLegClick}:LegProps){
   if(isVisible){
-      let avgTimeBetween = (timeBetweenStats as any)["mean_time"]
-      let timeDurationLegBetween = new TimeDuration(avgTimeBetween)
-
       const handleClick = () => {
         onLegClick("hello");
       };
-  
+
+      let color = "gray"
+      let avgTimeBetween = (timeBetweenStats as any)?.["mean_time"]
+
+      if (avgTimeBetween !== undefined) {
+        let timeDurationLegBetween = new TimeDuration(avgTimeBetween)
+        color = timeDurationLegBetween.compare(avgTimeBetweenStops)<0 ? "green" : "red"
+      }
+   
       return( 
         <div 
           className="inbetween routeBlock" 
-          style = {{color: timeDurationLegBetween.compare(avgTimeBetweenStops)<0 ? "green" : "red"}}
+          style = {{color: color}}
           onClick={handleClick}>
         </div>
       )

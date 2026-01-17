@@ -8,10 +8,14 @@ interface LegStatsProps{
 
 export default function LegStats({isVisible, timeBetweenStats}:LegStatsProps){
   if(isVisible){
+    let avgTimeBetween = (timeBetweenStats as any)?.["mean_time"]    
+    if(avgTimeBetween == undefined){
+      avgTimeBetween = "unknown"
+    }
     return( 
       <div className="legStats">
         <p>
-            AVG TIME: {(timeBetweenStats as any)["mean_time"]}
+            AVG TIME: {avgTimeBetween}
         </p>
       </div>)
   }
