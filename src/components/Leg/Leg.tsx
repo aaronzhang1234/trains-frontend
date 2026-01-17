@@ -18,7 +18,7 @@ export default function Leg({isVisible, timeBetweenStats, avgTimeBetweenStops,  
       let color = "gray"
       let avgTimeBetween = (timeBetweenStats as any)?.["mean_time"]
 
-      if (avgTimeBetween !== undefined) {
+      if (avgTimeBetween !== undefined && avgTimeBetween!== null) {
         let timeDurationLegBetween = new TimeDuration(avgTimeBetween)
         color = timeDurationLegBetween.compare(avgTimeBetweenStops)<0 ? "green" : "red"
       }

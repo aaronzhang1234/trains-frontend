@@ -10,7 +10,6 @@ import Header from './components/Header/Header';
 import LoadingGif from './assets/loading.gif'
 import React from 'react';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
-import { Duration } from 'luxon';
 import TrainsBlock from './components/TrainsBlock/TrainsBlock';
 
 Chart.register(...registerables);
@@ -165,7 +164,6 @@ class App extends Component<{}, AppState> {
 
   drawRoute=(train_response:any)=>{
     if(train_response.hasOwnProperty("no_of_trains")){
-      console.log("rerender")
       let route = train_response["route"]
       let route_order = (stations.route_info as any)[route]["route_order"];
       let fullRouteStats = train_response["stats"]["full_route_stats"]
@@ -175,16 +173,6 @@ class App extends Component<{}, AppState> {
         <React.Fragment>
         <div id="routeContainer">
           <h2>{fullRouteStats["fastest_train"]["total_time"]} - {fullRouteStats["avg_total_time"]} - {fullRouteStats["slowest_train"]["total_time"]}</h2>
-
-          {/* Canvas for the chart */}
-          <div style={{width: '400px', height: '300px', margin: '20px 0'}}>
-            <canvas ref={this.chartRef}></canvas>
-          </div>
-
-          <TrainsBlock 
-            trainsArray={train_response["trains"]}
-            route = {route}
-          />
 
           {/* Map of the route */}
           <div className="routeMap">
@@ -198,6 +186,18 @@ class App extends Component<{}, AppState> {
               />
             ))}
           </div>
+
+          {/* Table of Train times */}
+          <TrainsBlock 
+            trainsArray={train_response["trains"]}
+            route = {route}
+          />
+
+          {/* Canvas for the chart */}
+          <div style={{width: '400px', height: '300px', margin: '20px 0'}}>
+            <canvas ref={this.chartRef}></canvas>
+          </div>
+
         </div>
         {this.createForm()}
         </React.Fragment>

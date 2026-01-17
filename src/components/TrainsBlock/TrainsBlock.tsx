@@ -2,6 +2,7 @@ import {Component} from 'react'
 import stations from '../../stations.json'
 
 type TrainsBlockState = {
+  isTrainBlocksVisible : boolean
   isLegStatsVisible : boolean
 }
 
@@ -14,18 +15,22 @@ class TrainsBlock extends Component<TrainsBlockProps, TrainsBlockState>{
     constructor(props: TrainsBlockProps){
       super(props);
       this.state = {
-        isLegStatsVisible:false
+        isLegStatsVisible:false,
+        isTrainBlocksVisible : false
       }
     }
     handleLegClick = () =>{
       this.setState({isLegStatsVisible: !this.state.isLegStatsVisible})
     }
-    render(){
-      let station_routes = (stations.route_info as any)[this.props.route]["route_order"]
-      console.log(this.props.route)
+    removeMilliseconds = (timestamp: string) =>{
+      return timestamp.split(".")[0]
+    }
+    handleShowTrainsClick = () =>{
+      this.setState({isTrainBlocksVisible: !this.state.isTrainBlocksVisible})
+    }
+    createTable=(station_routes:any)=>{
       return(
-        <div className="routeBlock">
-          <table>
+        <table>
             <thead>
               <tr>
                 <th scope="col">Train Number</th>
@@ -40,12 +45,12 @@ class TrainsBlock extends Component<TrainsBlockProps, TrainsBlockState>{
               {this.props.trainsArray.map((train:any)=>(
                 <tr>
                   <th>{train["route_number"]}</th>
-                  <th>{train["start_time"]}</th>
+                  <th>{this.removeMilliseconds(train["start_time"])}</th>
                   <th>{train["total_time"]}</th>
                   {station_routes.map((station_id:string, index:number)=>{
                     let time = ""
                     if(train["stop_times"][index]!=null){
-                      time = (train["stop_times"][index]).split("T")[1]
+                      time = this.removeMilliseconds((train["stop_times"][index]).split("T")[1])
                     }
                     return <th>{time}</th>
                   })
@@ -53,7 +58,17 @@ class TrainsBlock extends Component<TrainsBlockProps, TrainsBlockState>{
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table>)
+    }
+    render(){
+      let buttonText = this.state.isTrainBlocksVisible?"Hide Trains":"Show Trains"
+
+      let station_routes = (stations.route_info as any)[this.props.route]["route_order"]
+      console.log(this.props.route)
+      return(
+        <div className="trainBlock">
+          <button onClick={this.handleShowTrainsClick}>{buttonText}</button>
+          {this.state.isTrainBlocksVisible && this.createTable(station_routes)}
         </div>
       )
     }
