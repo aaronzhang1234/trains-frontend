@@ -42,7 +42,7 @@ class TrainsBlock extends Component<TrainsBlockProps, TrainsBlockState>{
                   <th scope="col">Train Number</th>
                   <th scope="col">Start Time</th>
                   <th scope="col">Total Time</th>
-                  {station_routes.map((station_id:string, index:number)=>{
+                  {station_routes.map((station_id:string)=>{
                     return <th scope="col">{(stations.station_dict as any)[station_id]}</th>
                   })}
                 </tr>
@@ -53,7 +53,7 @@ class TrainsBlock extends Component<TrainsBlockProps, TrainsBlockState>{
                     <th>{train["route_number"]}</th>
                     <th>{this.removeMilliseconds(train["start_time"])}</th>
                     <th>{train["total_time"]}</th>
-                    {station_routes.map((station_id:string, index:number)=>{
+                    {station_routes.map((_station_id:string, index:number)=>{
                       let time = ""
                       if(train["stop_times"][index]!=null){
                         time = this.removeMilliseconds((train["stop_times"][index]).split("T")[1])
