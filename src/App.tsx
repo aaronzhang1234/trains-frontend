@@ -9,10 +9,8 @@ import { TimeDuration } from './services/Duration';
 import Header from './components/Header/Header';
 import LoadingGif from './assets/loading.gif'
 import React from 'react';
-import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import TrainsBlock from './components/TrainsBlock/TrainsBlock';
-
-Chart.register(...registerables);
+import TrainChart from './components/TrainChart/TrainChart';
 
 type AppState = {
   select_value:string
@@ -22,8 +20,6 @@ type AppState = {
 }
 
 class App extends Component<{}, AppState> {
-  private chartRef: React.RefObject<HTMLCanvasElement>;
-  private chartInstance: Chart | null = null;
   constructor(props: {}){
     super(props);
     this.state = {
@@ -32,8 +28,6 @@ class App extends Component<{}, AppState> {
       end_date: undefined,
       response: {}
     }
-    this.chartRef = React.createRef();
-
   }
   handleSubmit =(event:FormEvent<HTMLFormElement>) =>{
     event.preventDefault()
@@ -87,81 +81,6 @@ class App extends Component<{}, AppState> {
     return (time_between_stats as any)[route_key]
   }
 
-  // Method to create or update the chart
-  createOrUpdateChart = (train_list: any) => {
-    if (!this.chartRef.current) return;
-    var time_map = new Map()
-    train_list.map((train:any)=>{
-      if(train["total_time"]!= null){
-        let train_duration = new TimeDuration(train["total_time"])
-        let train_time = train_duration.roundDown()
-        if(time_map.has(train_time)){
-          time_map.set(train_time, time_map.get(train_time)+1)
-        }else{
-          time_map.set(train_time, 1)
-        }
-      }
-    })
-
-    console.log(time_map)  
-
-    // Convert to chart data
-    const labels = Array.from(time_map.keys()).sort();
-    let data = new Array()
-    labels.map((time:string)=>{
-      data.push(time_map.get(time))
-    })
-
-
-    const config: ChartConfiguration = {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: '# of Trains',
-          data: data, 
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    };
-
-    if (this.chartInstance) {
-      console.log('Destroying existing chart');
-      this.chartInstance.destroy();
-      this.chartInstance = null;
-    }
-
-    // Create new chart
-    console.log('Creating new chart');
-    this.chartInstance = new Chart(this.chartRef.current, config);
-  }
-
-  componentDidUpdate(prevProps: {}, prevState: AppState) {
-    // Only create chart when we have new train data and canvas is ready
-    if (this.state.response !== prevState.response && 
-        this.state.response.trains && 
-        this.chartRef.current) {
-      console.log('Component updated, creating chart');
-      this.createOrUpdateChart(this.state.response.trains);
-    }
-  }
-
-  componentWillUnmount() {
-    // Clean up chart when component unmounts
-    if (this.chartInstance) {
-      this.chartInstance.destroy();
-    }
-  }
-
   drawRoute=(train_response:any)=>{
     if(train_response.hasOwnProperty("no_of_trains")){
       let route = train_response["route"]
@@ -171,8 +90,12 @@ class App extends Component<{}, AppState> {
       let avgTimeBetweenStops = new TimeDuration(fullRouteStats["avg_total_time"]).divideBy(route_order.length)
       return(
         <React.Fragment>
+        {this.createForm()}
         <div id="routeContainer">
           <h2>{fullRouteStats["fastest_train"]["total_time"]} - {fullRouteStats["avg_total_time"]} - {fullRouteStats["slowest_train"]["total_time"]}</h2>
+
+          {/* Chart */}
+          <TrainChart trainList={train_response["trains"]} />
 
           {/* Map of the route */}
           <div className="routeMap">
@@ -193,13 +116,7 @@ class App extends Component<{}, AppState> {
             route = {route}
           />
 
-          {/* Canvas for the chart */}
-          <div style={{width: '400px', height: '300px', margin: '20px 0'}}>
-            <canvas ref={this.chartRef}></canvas>
-          </div>
-
         </div>
-        {this.createForm()}
         </React.Fragment>
       )
     }else if(train_response.hasOwnProperty("loading")){
