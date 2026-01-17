@@ -11,6 +11,7 @@ import LoadingGif from './assets/loading.gif'
 import React from 'react';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { Duration } from 'luxon';
+import TrainsBlock from './components/TrainsBlock/TrainsBlock';
 
 Chart.register(...registerables);
 
@@ -50,7 +51,9 @@ class App extends Component<{}, AppState> {
         return 
       }
 
+      let client_correlation_id = crypto.randomUUID()
       const headers= {
+        "client_correlation_id":client_correlation_id,
         "Content-Type":"text/plain",
         "route": route,
         "start_time": start_iso,
@@ -58,12 +61,14 @@ class App extends Component<{}, AppState> {
         "show_trains": "false"
       }
       this.setState({response:{"loading":true}})
+      console.log("Calling Endpoint with client correlationID: " + client_correlation_id)
       axios.get("https://ldchm3dr68.execute-api.us-east-1.amazonaws.com/Prod/trains", {headers, withCredentials:false} )
         .then(response=>this.handleTrainSuccess(response))    
         .catch(error=>this.handleError(error))
     }
   }
   handleTrainSuccess=(response:any)=>{
+    console.log(response)
     this.setState({response:response.data}) 
   }
 
@@ -175,6 +180,12 @@ class App extends Component<{}, AppState> {
           <div style={{width: '400px', height: '300px', margin: '20px 0'}}>
             <canvas ref={this.chartRef}></canvas>
           </div>
+
+          <TrainsBlock 
+            trainsArray={train_response["trains"]}
+            route = {route}
+          />
+
           {/* Map of the route */}
           <div className="routeMap">
             {route_order.map((stopId:string, index:number)=>(          
