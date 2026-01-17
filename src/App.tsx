@@ -9,7 +9,8 @@ import { TimeDuration } from './services/Duration';
 import Header from './components/Header/Header';
 import LoadingGif from './assets/loading.gif'
 import React from 'react';
-
+import TrainsBlock from './components/TrainsBlock/TrainsBlock';
+import TrainChart from './components/TrainChart/TrainChart';
 
 type AppState = {
   select_value:string
@@ -43,7 +44,9 @@ class App extends Component<{}, AppState> {
         return 
       }
 
+      let client_correlation_id = crypto.randomUUID()
       const headers= {
+        "client_correlation_id":client_correlation_id,
         "Content-Type":"text/plain",
         "route": route,
         "start_time": start_iso,
@@ -51,10 +54,15 @@ class App extends Component<{}, AppState> {
         "show_trains": "false"
       }
       this.setState({response:{"loading":true}})
+      console.log("Calling Endpoint with client correlationID: " + client_correlation_id)
       axios.get("https://ldchm3dr68.execute-api.us-east-1.amazonaws.com/Prod/trains", {headers, withCredentials:false} )
-        .then(response=>this.setState({response:response.data}))    
+        .then(response=>this.handleTrainSuccess(response))    
         .catch(error=>this.handleError(error))
     }
+  }
+  handleTrainSuccess=(response:any)=>{
+    console.log(response)
+    this.setState({response:response.data}) 
   }
 
   handleError=(error:any)=>{
@@ -82,8 +90,14 @@ class App extends Component<{}, AppState> {
       let avgTimeBetweenStops = new TimeDuration(fullRouteStats["avg_total_time"]).divideBy(route_order.length)
       return(
         <React.Fragment>
+        {this.createForm()}
         <div id="routeContainer">
           <h2>{fullRouteStats["fastest_train"]["total_time"]} - {fullRouteStats["avg_total_time"]} - {fullRouteStats["slowest_train"]["total_time"]}</h2>
+
+          {/* Chart */}
+          <TrainChart trainList={train_response["trains"]} />
+
+          {/* Map of the route */}
           <div className="routeMap">
             {route_order.map((stopId:string, index:number)=>(          
               <RouteBlock
@@ -95,8 +109,14 @@ class App extends Component<{}, AppState> {
               />
             ))}
           </div>
+
+          {/* Table of Train times */}
+          <TrainsBlock 
+            trainsArray={train_response["trains"]}
+            route = {route}
+          />
+
         </div>
-        {this.createForm()}
         </React.Fragment>
       )
     }else if(train_response.hasOwnProperty("loading")){
@@ -116,6 +136,7 @@ class App extends Component<{}, AppState> {
       this.createForm()
     )
   }
+ 
   createForm=()=>{
     return(
       <form onSubmit={this.handleSubmit}>
