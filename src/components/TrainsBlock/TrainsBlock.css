@@ -1,4 +1,5 @@
-.trainBlock{
-  display: inline-block;
-  white-space: nowrap;
+.tableHeader{
+  white-space:nowrap;
+  padding-left:1em;
+  padding-right:1em;
 }
