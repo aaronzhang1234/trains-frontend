@@ -45,7 +45,14 @@ class TrainsBlock extends Component<TrainsBlockProps, TrainsBlockState>{
     render(){
       let buttonText = this.state.isTrainBlocksVisible?"Hide Trains":"Show Trains"
 
+      let state_lake_close_datetime = new Date("2026-01-05T09:00:00Z")
+      let first_train_datetime = new Date(this.props.trainsArray[0]["start_time"]+ 'Z')
       let station_routes = (stations.route_info as any)[this.props.route]["route_order"]
+
+      if(first_train_datetime > state_lake_close_datetime){
+        console.log("After State and Lake closure")
+        station_routes = (stations.route_info_noSL as any)[this.props.route]["route_order"]
+      }
       return(
         <div className="trainBlock">
           <button onClick={this.handleShowTrainsClick}>{buttonText}</button>

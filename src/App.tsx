@@ -75,16 +75,20 @@ class App extends Component<{}, AppState> {
     this.setState({select_value:e.target.value})
   }
 
-  getLegStats= (route:string, stopIdx: number, time_between_stats:JSON) =>{
-    let station_routes = (stations.route_info as any)[route]["route_order"]
-    let route_key = station_routes[stopIdx] + "-" + station_routes[stopIdx+1]
+  getLegStats= (route_order:any, stopIdx: number, time_between_stats:JSON) =>{
+    let route_key = route_order[stopIdx] + "-" + route_order[stopIdx+1]
     return (time_between_stats as any)[route_key]
   }
 
   drawRoute=(train_response:any)=>{
     if(train_response.hasOwnProperty("no_of_trains")){
       let route = train_response["route"]
-      let route_order = (stations.route_info as any)[route]["route_order"];
+
+      let state_lake_close_datetime = new Date("2026-01-05T09:00:00Z") // 3AM Chicago time (CST = UTC-6)
+      let first_train_datetime = new Date(train_response["trains"][0]["start_time"] + 'Z')
+      let routeInfo = first_train_datetime < state_lake_close_datetime ? stations.route_info : stations.route_info_noSL
+      let route_order = (routeInfo as any)[route]["route_order"];
+
       let fullRouteStats = train_response["stats"]["full_route_stats"]
       let timeBetweenStats = train_response["stats"]["time_between_stats"]      
       let avgTimeBetweenStops = new TimeDuration(fullRouteStats["avg_total_time"]).divideBy(route_order.length)
@@ -104,7 +108,7 @@ class App extends Component<{}, AppState> {
                 stopId={stopId}
                 fullRouteStats = {fullRouteStats}
                 avgTimeBetweenStops = {avgTimeBetweenStops}
-                timeBetweenStats={this.getLegStats(route, index, timeBetweenStats)}
+                timeBetweenStats={this.getLegStats(route_order, index, timeBetweenStats)}
                 isLegVisible ={index!=route_order.length-1}
               />
             ))}
