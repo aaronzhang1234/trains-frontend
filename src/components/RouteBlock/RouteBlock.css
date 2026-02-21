@@ -1,26 +1,32 @@
+.routeBlock{
+  display: grid;
+  grid-template-columns: 50px auto;
+  white-space: nowrap;
+}
+
 .circle{
-  height: 25px;
+  grid-row: 1;
+  grid-column: 1;
+  justify-self: center;
+  align-self: center;
+  height: 2em;
   z-index: 5;
-  width: 25px;
+  width: 2em;
   background-color: #bbb;
   border-radius: 50%;
 }
 
 .stationName{
-  top: 50%;
-  left: 50%;
-  transform-origin: center center;
-  transform: rotate(-45deg);
-
+  grid-row: 1;
+  grid-column: 2;
+  font-size: 1.5em;
+  text-align: left;
+  margin: 0;
+  align-self: center;
 }
 
-.travelBlock{
-  display: flex;
-  align-items: center;
-}
-
-.routeBlock{
-  display: inline-block;
-  width: 2.5em;
-  white-space: nowrap;
+.inbetween{
+  grid-row: 2;
+  grid-column: 1;
+  justify-self: center;
 }
