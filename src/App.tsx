@@ -7,7 +7,7 @@ import RouteBlock from './components/RouteBlock/RouteBlock';
 import stations from './stations.json';
 import mockResponse from './response.json';
 
-const USE_MOCK_DATA = false;
+const USE_MOCK_DATA = true;
 import { TimeDuration } from './services/Duration';
 import Header from './components/Header/Header';
 import LoadingGif from './assets/loading.gif'
@@ -87,6 +87,21 @@ class App extends Component<{}, AppState> {
     return (time_between_stats as any)[route_key]
   }
 
+  formatTime = (timestamp: string, showDate:boolean) => {
+    const date = new Date(timestamp + 'Z'); // Assume UTC input
+    const options : Intl.DateTimeFormatOptions={
+      timeZone: 'America/Chicago',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    }
+    if (showDate){
+      options.month='short'
+      options.day='numeric'
+    }
+
+    return date.toLocaleString('en-US',options);
+  }
   drawRoute=(train_response:any)=>{
     if(train_response.hasOwnProperty("no_of_trains")){
       let route = train_response["route"]
@@ -106,30 +121,40 @@ class App extends Component<{}, AppState> {
         <div id="routeContainer">
           <h2>{fullRouteStats["fastest_train"]["total_time"]} - {fullRouteStats["avg_total_time"]} - {fullRouteStats["slowest_train"]["total_time"]}</h2>
 
+          {/* Map of the route */}
+          <div id="routeWrapper">
+            <div className="routeMap">
+              <div className="routeHeader">
+                <div id="firstColumnPlaceHolder"></div>
+                <div id="secondColumnPlaceHolder" style={{fontSize:"1.5em",width:`${maxStationNameLen}ch`}}></div>
+              </div>
+              {route_order.map((stopId:string, index:number)=>(          
+                <RouteBlock
+                  stopId={stopId}
+                  stopIdx={index}
+                  trainResponse = {train_response["trains"]}
+                  avgTimeBetweenStops = {avgTimeBetweenStops}
+                  timeBetweenStats={this.getLegStats(route_order, index, timeBetweenStats)}
+                  isLegVisible ={index!=route_order.length-1}
+                  maxStationNameLen={maxStationNameLen}
+                />
+              ))}
+            </div>
+            {train_response["trains"].map((train:any, idx:number)=>(
+              <div className="trainNumberInfo">
+                <div className="routeNumberHeader">
+                  <p className="routeNumber">{train["route_number"]}</p>
+                </div>
+                {train["stop_times"].map((stopTime:string,idx:number)=>(
+                  <p className="stopTime">{this.formatTime(stopTime,false)}</p>
+                ))}
+              </div>
+            ))}        
+          </div>
+
           {/* Chart */}
           <TrainChart trainList={train_response["trains"]} />
 
-          {/* Map of the route */}
-          <div className="routeMap">
-            <div className="routeHeader">
-              <div id="firstColumnPlaceHolder"></div>
-              <div id="secondColumnPlaceHolder" style={{fontSize:"1.5em",width:`${maxStationNameLen}ch`}}></div>
-              {train_response["trains"].map((train:any, idx:number)=>(
-                <p style={{width:"5em", gridRow:1, gridColumn:idx+3}}>{train["route_number"]}</p>
-              ))}
-            </div>
-            {route_order.map((stopId:string, index:number)=>(          
-              <RouteBlock
-                stopId={stopId}
-                stopIdx={index}
-                trainResponse = {train_response["trains"]}
-                avgTimeBetweenStops = {avgTimeBetweenStops}
-                timeBetweenStats={this.getLegStats(route_order, index, timeBetweenStats)}
-                isLegVisible ={index!=route_order.length-1}
-                maxStationNameLen={maxStationNameLen}
-              />
-            ))}
-          </div>
         </div>
         </React.Fragment>
       )

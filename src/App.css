@@ -10,6 +10,7 @@
 #firstColumnPlaceHolder{
   grid-row:1;
   grid-column:1;
+  height:2em;
   width:2em;
 }
 #secondColumnPlaceHolder{
@@ -21,16 +22,22 @@
   display: grid;
   grid-template-columns: 50px auto;
   white-space: nowrap;
+  height:3em;
 }
 
 .routeMap{ 
-  padding-left:15em;
-  padding-right:15em;
+  float:left;
 }
 
 #loadingGif{
   width:10em;
   height:10em;
+}
+
+#routeWrapper{
+  width:80em;
+  margin-left:20em;
+  margin-right:20em;
 }
 
 form select,
@@ -41,4 +48,23 @@ form input {
   margin-right:.3em;
   padding: 0.5em 0.75em;
   height: auto;
+}
+
+.routeNumberHeader{
+  white-space: nowrap;
+  height:3em; 
+}
+.routeNumber{
+  width:"4em";
+  margin:0;
+  font-size:1.5em;
+  grid-row:1;
+}
+
+.trainNumberInfo{
+  float:left;
+  width:5em;
+}
+.stopTime{
+  height:1em;
 }
