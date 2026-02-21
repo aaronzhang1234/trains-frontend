@@ -7,7 +7,7 @@ import RouteBlock from './components/RouteBlock/RouteBlock';
 import stations from './stations.json';
 import mockResponse from './response.json';
 
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false;
 import { TimeDuration } from './services/Duration';
 import Header from './components/Header/Header';
 import LoadingGif from './assets/loading.gif'
@@ -26,7 +26,7 @@ class App extends Component<{}, AppState> {
   constructor(props: {}){
     super(props);
     this.state = {
-      select_value: "brn-1",
+      select_value: "",
       start_date: new Date(),
       end_date: undefined,
       response: {}
