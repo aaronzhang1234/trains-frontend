@@ -9,9 +9,9 @@
   grid-column: 1;
   justify-self: center;
   align-self: center;
-  height: 50px;
+  height: 2em;
   z-index: 5;
-  width: 50px;
+  width: 2em;
   background-color: #bbb;
   border-radius: 50%;
 }
@@ -19,9 +19,10 @@
 .stationName{
   grid-row: 1;
   grid-column: 2;
-  font-size: 2em;
+  font-size: 1.5em;
   text-align: left;
-  margin: 0
+  margin: 0;
+  align-self: center;
 }
 
 .inbetween{

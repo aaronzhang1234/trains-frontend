@@ -12,7 +12,6 @@ import { TimeDuration } from './services/Duration';
 import Header from './components/Header/Header';
 import LoadingGif from './assets/loading.gif'
 import React from 'react';
-import TrainsBlock from './components/TrainsBlock/TrainsBlock';
 import TrainChart from './components/TrainChart/TrainChart';
 
 
@@ -114,7 +113,7 @@ class App extends Component<{}, AppState> {
           <div className="routeMap">
             <div className="routeHeader">
               <div id="firstColumnPlaceHolder"></div>
-              <div id="secondColumnPlaceHolder" style={{fontSize:"2em",width:`${maxStationNameLen}ch`}}></div>
+              <div id="secondColumnPlaceHolder" style={{fontSize:"1.5em",width:`${maxStationNameLen}ch`}}></div>
               {train_response["trains"].map((train:any, idx:number)=>(
                 <p style={{width:"5em", gridRow:1, gridColumn:idx+3}}>{train["route_number"]}</p>
               ))}
@@ -131,13 +130,6 @@ class App extends Component<{}, AppState> {
               />
             ))}
           </div>
-
-          {/* Table of Train times */}
-          <TrainsBlock 
-            trainsArray={train_response["trains"]}
-            route = {route}
-          />
-
         </div>
         </React.Fragment>
       )
