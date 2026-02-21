@@ -7,6 +7,22 @@
   width:100%;
 }
 
+#firstColumnPlaceHolder{
+  grid-row:1;
+  grid-column:1;
+  width:2em;
+}
+#secondColumnPlaceHolder{
+  grid-row:1;
+  grid-column:2;
+}
+
+.routeHeader{
+  display: grid;
+  grid-template-columns: 50px auto;
+  white-space: nowrap;
+}
+
 .routeMap{ 
   padding-left:15em;
   padding-right:15em;

@@ -100,6 +100,7 @@ class App extends Component<{}, AppState> {
       let fullRouteStats = train_response["stats"]["full_route_stats"]
       let timeBetweenStats = train_response["stats"]["time_between_stats"]      
       let avgTimeBetweenStops = new TimeDuration(fullRouteStats["avg_total_time"]).divideBy(route_order.length)
+      let maxStationNameLen = Math.max(...route_order.map((id: string) => ((stations.station_dict as any)[id] ?? '').length))
       return(
         <React.Fragment>
         {this.createForm()}
@@ -111,6 +112,13 @@ class App extends Component<{}, AppState> {
 
           {/* Map of the route */}
           <div className="routeMap">
+            <div className="routeHeader">
+              <div id="firstColumnPlaceHolder"></div>
+              <div id="secondColumnPlaceHolder" style={{fontSize:"2em",width:`${maxStationNameLen}ch`}}></div>
+              {train_response["trains"].map((train:any, idx:number)=>(
+                <p style={{width:"5em", gridRow:1, gridColumn:idx+3}}>{train["route_number"]}</p>
+              ))}
+            </div>
             {route_order.map((stopId:string, index:number)=>(          
               <RouteBlock
                 stopId={stopId}
@@ -119,6 +127,7 @@ class App extends Component<{}, AppState> {
                 avgTimeBetweenStops = {avgTimeBetweenStops}
                 timeBetweenStats={this.getLegStats(route_order, index, timeBetweenStats)}
                 isLegVisible ={index!=route_order.length-1}
+                maxStationNameLen={maxStationNameLen}
               />
             ))}
           </div>
