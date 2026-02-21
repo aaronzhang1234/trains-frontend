@@ -7,8 +7,9 @@
   width:100%;
 }
 
-.routeMap{
-  padding-top:15em;
+.routeMap{ 
+  padding-left:15em;
+  padding-right:15em;
 }
 
 #loadingGif{

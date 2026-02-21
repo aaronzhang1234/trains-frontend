@@ -11,7 +11,8 @@ type RouteBlockState = {
 
 interface RouteBlockProps{
   stopId : string
-  fullRouteStats : JSON
+  stopIdx : number
+  trainResponse : Array<any>
   timeBetweenStats: JSON
   isLegVisible : boolean
   avgTimeBetweenStops : TimeDuration
@@ -30,16 +31,17 @@ class RouteBlock extends Component<RouteBlockProps, RouteBlockState>{
     render(){
       return(
         <div className="routeBlock">
+          <div className = "circle" ></div>
           <p className = "stationName">{(stations.station_dict as any)[this.props.stopId]}</p>
-          <div className="travelBlock">
-            <div className = "circle" ></div>
-            <Leg 
-              isVisible= {this.props.isLegVisible}
-              timeBetweenStats={this.props.timeBetweenStats}
-              avgTimeBetweenStops = {this.props.avgTimeBetweenStops}
-              onLegClick = {this.handleLegClick}
-            />
-          </div>
+          {this.props.trainResponse.map((train:any,idx:number)=>(
+            <p style={{gridRow:1, gridColumn:3+idx}}>{train["stop_times"][this.props.stopIdx+1]}</p>
+          ))}
+          <Leg 
+            isVisible= {this.props.isLegVisible}
+            timeBetweenStats={this.props.timeBetweenStats}
+            avgTimeBetweenStops = {this.props.avgTimeBetweenStops}
+            onLegClick = {this.handleLegClick}
+          />
           <LegStats
             isVisible={this.state.isLegStatsVisible}
             timeBetweenStats={this.props.timeBetweenStats}

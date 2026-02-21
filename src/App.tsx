@@ -5,12 +5,16 @@ import "./App.css";
 import axios from 'axios';
 import RouteBlock from './components/RouteBlock/RouteBlock';
 import stations from './stations.json';
+import mockResponse from './response.json';
+
+const USE_MOCK_DATA = true;
 import { TimeDuration } from './services/Duration';
 import Header from './components/Header/Header';
 import LoadingGif from './assets/loading.gif'
 import React from 'react';
 import TrainsBlock from './components/TrainsBlock/TrainsBlock';
 import TrainChart from './components/TrainChart/TrainChart';
+
 
 type AppState = {
   select_value:string
@@ -54,9 +58,13 @@ class App extends Component<{}, AppState> {
         "show_trains": "false"
       }
       this.setState({response:{"loading":true}})
+      if (USE_MOCK_DATA) {
+        this.setState({response: mockResponse})
+        return
+      }
       console.log("Calling Endpoint with client correlationID: " + client_correlation_id)
       axios.get("https://ldchm3dr68.execute-api.us-east-1.amazonaws.com/Prod/trains", {headers, withCredentials:false} )
-        .then(response=>this.handleTrainSuccess(response))    
+        .then(response=>this.handleTrainSuccess(response))
         .catch(error=>this.handleError(error))
     }
   }
@@ -106,7 +114,8 @@ class App extends Component<{}, AppState> {
             {route_order.map((stopId:string, index:number)=>(          
               <RouteBlock
                 stopId={stopId}
-                fullRouteStats = {fullRouteStats}
+                stopIdx={index}
+                trainResponse = {train_response["trains"]}
                 avgTimeBetweenStops = {avgTimeBetweenStops}
                 timeBetweenStats={this.getLegStats(route_order, index, timeBetweenStats)}
                 isLegVisible ={index!=route_order.length-1}
