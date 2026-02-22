@@ -14,7 +14,7 @@ interface RouteBlockProps{
   stopIdx : number
   trainResponse : Array<any>
   timeBetweenStats: JSON
-  isLegVisible : boolean
+  isLastStop : boolean
   avgTimeBetweenStops : TimeDuration
   maxStationNameLen : number
 }
@@ -46,11 +46,11 @@ class RouteBlock extends Component<RouteBlockProps, RouteBlockState>{
     }
     render(){
       return(
-        <div className="routeBlock">
+        <div className="routeBlock" style={{marginTop: this.props.isLastStop ? '-1.5em' : undefined}}>
           <div className = "circle" ></div>
           <p className = "stationName" style={{width: `${this.props.maxStationNameLen}ch`}}>{(stations.station_dict as any)[this.props.stopId]}</p>
           <Leg 
-            isVisible= {this.props.isLegVisible}
+            isVisible= {!this.props.isLastStop}
             timeBetweenStats={this.props.timeBetweenStats}
             avgTimeBetweenStops = {this.props.avgTimeBetweenStops}
             onLegClick = {this.handleLegClick}

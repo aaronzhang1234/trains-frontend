@@ -135,7 +135,7 @@ class App extends Component<{}, AppState> {
                   trainResponse = {train_response["trains"]}
                   avgTimeBetweenStops = {avgTimeBetweenStops}
                   timeBetweenStats={this.getLegStats(route_order, index, timeBetweenStats)}
-                  isLegVisible ={index!=route_order.length-1}
+                  isLastStop ={index==route_order.length-1}
                   maxStationNameLen={maxStationNameLen}
                 />
               ))}
@@ -145,7 +145,7 @@ class App extends Component<{}, AppState> {
                 <div className="routeNumberHeader">
                   <p className="routeNumber">{train["route_number"]}</p>
                 </div>
-                {train["stop_times"].map((stopTime:string,idx:number)=>(
+                {train["stop_times"].slice(1).map((stopTime:string,idx:number)=>(
                   <p className="stopTime">{this.formatTime(stopTime,false)}</p>
                 ))}
               </div>
