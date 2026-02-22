@@ -66,5 +66,6 @@ form input {
   width:5em;
 }
 .stopTime{
-  height:1em;
+  height:5em;
+  margin:0;
 }

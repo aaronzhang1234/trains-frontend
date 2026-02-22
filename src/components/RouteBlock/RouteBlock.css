@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: 50px auto;
   white-space: nowrap;
+  height:5em;
 }
 
 .circle{
@@ -23,10 +24,4 @@
   text-align: left;
   margin: 0;
   align-self: center;
-}
-
-.inbetween{
-  grid-row: 2;
-  grid-column: 1;
-  justify-self: center;
 }
